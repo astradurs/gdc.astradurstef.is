@@ -19,7 +19,10 @@ export function ThemeSwitcher() {
   const icon = theme === "dark" ? <MoonIcon /> : <SunIcon />
 
   return (
-    <IconButton onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+    <IconButton
+      variant="surface"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+    >
       {icon}
     </IconButton>
   )

@@ -1,14 +1,37 @@
 "use client"
 
-import { Flex, TabNav } from "@radix-ui/themes"
+import { Button, Flex, TabNav, Text } from "@radix-ui/themes"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { ThemeSwitcher } from "./theme-switcher"
 
-export default function Header() {
+export default function Header({
+  isAuthenticated,
+  authKitUrl,
+}: {
+  isAuthenticated: boolean
+  authKitUrl: string
+}) {
   // get where we are in the app next
-  const path = window.location.pathname
+  const pathname = usePathname()
 
-  const isEvents = path === "/"
-  const isRestaurants = path === "/restaurants"
+  const isEvents = pathname === "/"
+  const isRestaurants = pathname.startsWith("/restaurants")
+  const isStudio = pathname.startsWith("/studio")
+
+  if (isStudio) {
+    return null
+  }
+
+  const authButton = isAuthenticated ? (
+    <Button disabled asChild>
+      <Text>Signed in</Text>
+    </Button>
+  ) : (
+    <Button asChild>
+      <Link href={authKitUrl}>Sign in</Link>
+    </Button>
+  )
 
   return (
     <Flex justify="between">
@@ -20,12 +43,13 @@ export default function Header() {
           <TabNav.Link href="/restaurants" active={isRestaurants}>
             Veitingahús
           </TabNav.Link>
-          <TabNav.Link href="/studio" active={isRestaurants}>
-            Stjórnendur
-          </TabNav.Link>
+          <TabNav.Link href="/studio">Stjórnendur</TabNav.Link>
         </TabNav.Root>
       </Flex>
-      <ThemeSwitcher />
+      <Flex gap="2">
+        {authButton}
+        <ThemeSwitcher />
+      </Flex>
     </Flex>
   )
 }
