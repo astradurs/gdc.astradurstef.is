@@ -4,6 +4,7 @@ import { cookies } from "next/headers"
 
 // Javascript Object Signing and Encryption (JOSE)
 // https://www.npmjs.com/package/jose
+import { prisma } from "@/db/prisma-client"
 import { jwtVerify } from "jose"
 
 const workos = new WorkOS(process.env.WORKOS_API_KEY)
@@ -44,10 +45,16 @@ export async function verifyJwtToken(token: string) {
   }
 }
 
+type TUser = {
+  email: string
+  firstname: string | null
+  lastname: string | null
+}
+
 // Verify the JWT and return the user
 export async function getUser(): Promise<{
   isAuthenticated: boolean
-  user?: User | null
+  user?: TUser | null
 }> {
   const ck = await cookies()
   const token = ck.get("token")?.value
@@ -55,9 +62,18 @@ export async function getUser(): Promise<{
   if (token) {
     const verifiedToken = await verifyJwtToken(token)
     if (verifiedToken) {
+      const authUser = verifiedToken.user as User | null
+      if (authUser === null) {
+        return { isAuthenticated: false }
+      }
+      const dbUser = await prisma.user.findUnique({
+        where: {
+          email: authUser.email,
+        },
+      })
       return {
         isAuthenticated: true,
-        user: verifiedToken.user as User | null,
+        user: dbUser,
       }
     }
   }

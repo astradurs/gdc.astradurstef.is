@@ -25,15 +25,15 @@ export default async function Events() {
 
   const { futureEvents, pastEvents } = data
 
-  const firstName = user?.firstName
-    ? user.firstName[0].toUpperCase() + user.firstName.slice(1)
-    : "Þú"
-  const lastName =
-    firstName !== "Þú" && user?.lastName
-      ? ` ${user.lastName[0].toUpperCase() + user.lastName.slice(1)}`
-      : ""
-
-  const fullName = `${firstName}${lastName}`
+  let fullName = "Þú"
+  if (user !== null && user !== undefined) {
+    if (user.firstname !== null) {
+      fullName = user.firstname
+      if (user.lastname !== null) {
+        fullName = `${fullName} ${user.lastname}`
+      }
+    }
+  }
 
   return (
     <Box>
