@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model gdcwaitlist {
+  email        String       @db.VarChar(100)
+  isodate      String       @db.VarChar(100)
+  createtime   DateTime     @default(now()) @db.Timestamp(6)
+  restaurantid String?
+  user         user         @relation(fields: [email], references: [email])
+  restaurant   restaurants? @relation(fields: [restaurantid], references: [id])
+
+  @@id([isodate, email])
+}
+
+model restaurants {
+  id            String        @id @default(uuid())
+  name          String
+  address       String
+  city          String
+  zip           String
+  createtime    DateTime      @default(now()) @db.Timestamp(6)
+  updatetime    DateTime      @default(now()) @db.Timestamp(6)
+  googlemapsurl String?
+  websiteurl    String?
+  waitlists     gdcwaitlist[]
+  votes         votes[]
+}
+
+model votes {
+  email        String      @db.VarChar(100)
+  restaurantid String
+  vote         Boolean
+  createtime   DateTime    @default(now()) @db.Timestamp(6)
+  user         user        @relation(fields: [email], references: [email])
+  restaurant   restaurants @relation(fields: [restaurantid], references: [id])
+
+  @@id([email, restaurantid])
+}
+
+model user {
+  email          String           @id @unique
+  firstname      String?
+  lastname       String?
+  imageurl       String?
+  createtime     DateTime         @default(now()) @db.Timestamp(6)
+  updatetime     DateTime         @default(now()) @db.Timestamp(6)
+  bingocard      bingocard[]
+  bingocardfield bingocardfield[]
+  waitlists      gdcwaitlist[]
+  votes          votes[]
+}
+
+model bingocard {
+  email      String
+  createtime DateTime   @default(now()) @db.Timestamp(6)
+  updatetime DateTime   @default(now()) @db.Timestamp(6)
+  fields     String[]
+  solves     String[]
+  eventslug  String
+  solved     Boolean
+  user       user       @relation(fields: [email], references: [email])
+  bingoevent bingoevent @relation(fields: [eventslug], references: [eventslug])
+
+  @@id([email, eventslug])
+}
+
+model bingocardfield {
+  id         String     @id
+  fieldvalue String
+  createtime DateTime   @default(now()) @db.Timestamp(6)
+  updatetime DateTime   @default(now()) @db.Timestamp(6)
+  eventslug  String
+  email      String
+  user       user       @relation(fields: [email], references: [email])
+  bingoevent bingoevent @relation(fields: [eventslug], references: [eventslug])
+}
+
+model bingoevent {
+  eventname      String
+  eventslug      String           @id
+  createtime     DateTime         @default(now()) @db.Timestamp(6)
+  updatetime     DateTime         @default(now()) @db.Timestamp(6)
+  bingocard      bingocard[]
+  bingocardfield bingocardfield[]
+}
+
+model counters {
+  id          String   @id
+  count       Int
+  emoji       String
+  counterName String
+  createtime  DateTime @default(now()) @db.Timestamp(6)
+  updatetime  DateTime @default(now()) @db.Timestamp(6)
+}
