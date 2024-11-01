@@ -8,16 +8,12 @@ import {
 export default async function Waitlist({
   email,
   isoDate,
-  limit,
-  name,
   registrationStatus,
   registrationStart,
   waitlist,
 }: {
   email: string
   isoDate: string
-  limit: number
-  name: string
   registrationStatus: string
   registrationStart: string
   waitlist: Array<any>

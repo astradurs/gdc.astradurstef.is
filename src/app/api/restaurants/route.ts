@@ -1,7 +1,11 @@
 import { prisma } from "@/db/prisma-client"
 import { NextRequest, NextResponse } from "next/server"
+import ApiEvent from "../shared/api-event"
 
 export async function GET(request: NextRequest) {
+  const f = "listRestaurants"
+  const apiEvent = new ApiEvent(request)
+  apiEvent.logPrettyString()
   try {
     const restaurants = await prisma.restaurants.findMany({
       include: {

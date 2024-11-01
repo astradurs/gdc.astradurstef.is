@@ -24,9 +24,7 @@ export default async function Event({
         <EventInfo event={event} />
         <Waitlist
           email="test"
-          limit={event.limit}
           isoDate={p.slug}
-          name="no name?!"
           registrationStatus={event.registrationStatus}
           registrationStart={event.registration_start}
           waitlist={event.waitlist}
