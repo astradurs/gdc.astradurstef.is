@@ -7,18 +7,22 @@ export async function GET(request: NextRequest) {
   const apiEvent = new ApiEvent(request)
   apiEvent.logPrettyString()
   try {
+    console.log({ f }, "Fetching restaurants")
     const restaurants = await prisma.restaurants.findMany({
       include: {
         votes: true,
       },
     })
 
-    if (!restaurants) {
+    if (restaurants.length === 0) {
+      console.log({ f }, "No restaurants found")
       return NextResponse.json(
         { error: "No restaurants found" },
         { status: 404 },
       )
     }
+
+    console.log({ f }, `Fetched ${restaurants.length} restaurants`)
 
     const waitlistsByRestaurantIsoDate = await prisma.gdcwaitlist.groupBy({
       by: ["restaurantid", "isodate"],

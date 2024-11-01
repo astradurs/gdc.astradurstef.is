@@ -5,6 +5,15 @@ import {
   RemoveFromWaitlistButton,
 } from "./waitlist-buttons"
 
+type TWaitlistEntry = {
+  user: {
+    firstname: string
+    lastname: string
+  }
+  email: string
+  isodate: string
+  createtime: string
+}
 export default async function Waitlist({
   email,
   isoDate,
@@ -16,7 +25,7 @@ export default async function Waitlist({
   isoDate: string
   registrationStatus: string
   registrationStart: string
-  waitlist: Array<any>
+  waitlist: Array<TWaitlistEntry>
 }) {
   if (waitlist.length === 0) {
     return <Text>Enginn á biðlista</Text>
