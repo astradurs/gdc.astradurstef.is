@@ -3,16 +3,11 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(
   request: NextRequest,
-  {
-    params,
-  }: {
-    params: {
-      restaurantId: string
-    }
-  },
+  { params: paramsPromise }: { params: Promise<{ restaurantId: string }> },
 ) {
   try {
     const { email, vote } = await request.json()
+    const params = await paramsPromise
 
     if (!email || vote === undefined) {
       throw new Error("Missing required fields")
