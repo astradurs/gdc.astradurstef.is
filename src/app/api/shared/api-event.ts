@@ -20,9 +20,6 @@ export default class ApiEvent {
     const method = this.method()
     console.log("Method:", method)
 
-    const body = JSON.stringify(this.body(), null, 2)
-    console.log("Body:", body)
-
     const searchParams = this.searchParams().toString()
     console.log("Search Params:", searchParams)
   }
@@ -41,20 +38,6 @@ export default class ApiEvent {
 
   method() {
     return this.request.method
-  }
-
-  body(): Promise<unknown> | null {
-    if (this.method() !== "POST") {
-      return null
-    }
-    return this.request.json()
-  }
-
-  formData(): Promise<FormData> | null {
-    if (this.method() !== "POST") {
-      return null
-    }
-    return this.request.formData()
   }
 
   searchParams() {

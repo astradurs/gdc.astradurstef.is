@@ -28,7 +28,18 @@ export default async function Waitlist({
   waitlist: Array<TWaitlistEntry>
 }) {
   if (waitlist.length === 0) {
-    return <Text>Enginn á biðlista</Text>
+    return (
+      <Grid>
+        <CreateNewWaitListEntryButton
+          isoDate={isoDate}
+          email={email}
+          isRegistered={false}
+          registrationStatus={registrationStatus}
+          registrationStart={registrationStart}
+        />
+        <Text>Enginn á biðlista</Text>
+      </Grid>
+    )
   }
   const sortedByDate = _.sortBy(waitlist, (row) => row.createtime)
 

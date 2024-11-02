@@ -117,3 +117,109 @@ export async function GET(
     return response
   }
 }
+
+type TAddToWaitlistBody = {
+  email: string
+}
+
+export async function POST(
+  request: NextRequest,
+  { params: paramsPromise }: { params: Promise<{ slug: string }> },
+): Promise<TSuccessResponse | TErrorResponse> {
+  const f = "addToWaitlist"
+  const apiEvent = new ApiEvent(request)
+  apiEvent.logPrettyString()
+
+  const params = await paramsPromise
+  console.log({ f }, "Params: ", params)
+  const { slug } = params
+
+  const mock_server_time = apiEvent.query("mock_server_time") ?? null
+  const dtu = new DateTimeUtils(mock_server_time)
+  const today = dtu.local().toISO()
+  try {
+    const body = (await request.json()) as TAddToWaitlistBody
+
+    const email = body.email
+
+    if (!email) {
+      console.log({ f }, "Missing required fields")
+      const response: TErrorResponse = NextResponse.json(
+        {
+          error: {
+            message: "Missing required fields",
+            code: "MissingRequiredFields",
+          },
+        },
+        { status: 400 },
+      )
+
+      console.log({ f }, "❌ Error", response)
+      return response
+    }
+
+    const event: GDCEvent = await sanityFetch({
+      query: eventQuery,
+      params: { slug },
+    })
+
+    if (event === null) {
+      console.log({ f }, "No event found", { slug })
+      const response = NextResponse.json(null, { status: 404 })
+      console.log({ f }, "❌ Error", response)
+      return response
+    }
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    if (user === null) {
+      console.log({ f }, "User not found", { email })
+      const response: TErrorResponse = NextResponse.json(
+        {
+          error: {
+            message: "User not found",
+            code: "UserNotFound",
+          },
+        },
+        { status: 404 },
+      )
+
+      console.log({ f }, "❌ Error", response)
+      return response
+    }
+
+    await prisma.gdcwaitlist.create({
+      data: {
+        isodate: slug,
+        user: {
+          connect: {
+            email,
+          },
+        },
+        createtime: today,
+      },
+    })
+
+    const response = NextResponse.json(null, { status: 200 })
+    console.log({ f }, "✅ Success", response)
+
+    return response
+  } catch (e) {
+    console.log({ f }, "Error creating a new waitlist entry", e)
+    const response: TErrorResponse = NextResponse.json(
+      {
+        error: {
+          message: "Generic error",
+          code: "GenericError",
+        },
+      },
+      { status: 500 },
+    )
+
+    console.log({ f }, "❌ Error", response)
+    return response
+  }
+}

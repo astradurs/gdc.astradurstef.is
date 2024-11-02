@@ -22,13 +22,19 @@ export function CreateNewWaitListEntryButton({
   const [isCreating, setIsCreating] = useState(false)
 
   const create = async (e: React.SyntheticEvent) => {
+    const url = `/api/events/${isoDate}`
+    console.log("createing waitlist entry", { url })
     setIsCreating(true)
     e.preventDefault()
-    await fetch(`/api/waitlist/${isoDate}`, {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    })
-
+    try {
+      await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      })
+    } catch (e) {
+      console.error(e)
+    }
+    setIsCreating(false)
     router.refresh()
   }
 
@@ -80,7 +86,7 @@ export function RemoveFromWaitlistButton({
   const remove = async (e: React.SyntheticEvent) => {
     setIsRemoving(true)
     e.preventDefault()
-    await fetch(`/api/waitlist/${isoDate}/${email}`, {
+    await fetch(`/api/events/${isoDate}/${email}`, {
       method: "DELETE",
     })
 
