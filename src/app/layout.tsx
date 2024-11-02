@@ -4,7 +4,6 @@ import { AuthKitProvider } from "@workos-inc/authkit-nextjs"
 import type { Metadata } from "next"
 import { getAuthorizationUrl, getUser } from "./auth"
 import Header from "./components/header"
-import NotSignedIn from "./components/not-signed-in"
 import "./globals.css"
 import { ClientProviders } from "./providers"
 
@@ -37,18 +36,14 @@ export default async function RootLayout({
           <AuthKitProvider>
             <Container>
               <Flex height="100%" direction="column" justify="between">
-                {isAuthenticated ? (
-                  <main>
-                    <Header
-                      isAuthenticated={isAuthenticated}
-                      authKitUrl={authKitUrl}
-                    />
+                <main>
+                  <Header
+                    isAuthenticated={isAuthenticated}
+                    authKitUrl={authKitUrl}
+                  />
 
-                    {children}
-                  </main>
-                ) : (
-                  <NotSignedIn authKitUrl={authKitUrl} />
-                )}
+                  {children}
+                </main>
               </Flex>
             </Container>
           </AuthKitProvider>
