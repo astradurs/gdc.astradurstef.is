@@ -2,6 +2,7 @@
 
 import { TrashIcon } from "@radix-ui/react-icons"
 import { Button, IconButton } from "@radix-ui/themes"
+
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -22,20 +23,15 @@ export function CreateNewWaitListEntryButton({
   const [isCreating, setIsCreating] = useState(false)
 
   const create = async (e: React.SyntheticEvent) => {
-    const url = `/api/events/${isoDate}`
-    console.log("createing waitlist entry", { url })
     setIsCreating(true)
     e.preventDefault()
-    try {
-      await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({ email }),
-      })
-    } catch (e) {
-      console.error(e)
-    }
-    setIsCreating(false)
+    await fetch(`/api/events/${isoDate}`, {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    })
+
     router.refresh()
+    setIsCreating(false)
   }
 
   if (isRegistered) {
@@ -91,6 +87,7 @@ export function RemoveFromWaitlistButton({
     })
 
     router.refresh()
+    setIsRemoving(false)
   }
 
   return (

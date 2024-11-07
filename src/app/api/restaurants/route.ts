@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log({ f }, `Fetched ${restaurants.length} restaurants`)
+    console.log({ f }, "Sample restaurant", restaurants[0])
 
     const waitlistsByRestaurantIsoDate = await prisma.gdcwaitlist.groupBy({
       by: ["restaurantid", "isodate"],

@@ -51,51 +51,6 @@ model user {
   imageurl       String?
   createtime     DateTime         @default(now()) @db.Timestamp(6)
   updatetime     DateTime         @default(now()) @db.Timestamp(6)
-  bingocard      bingocard[]
-  bingocardfield bingocardfield[]
   waitlists      gdcwaitlist[]
   votes          votes[]
-}
-
-model bingocard {
-  email      String
-  createtime DateTime   @default(now()) @db.Timestamp(6)
-  updatetime DateTime   @default(now()) @db.Timestamp(6)
-  fields     String[]
-  solves     String[]
-  eventslug  String
-  solved     Boolean
-  user       user       @relation(fields: [email], references: [email])
-  bingoevent bingoevent @relation(fields: [eventslug], references: [eventslug])
-
-  @@id([email, eventslug])
-}
-
-model bingocardfield {
-  id         String     @id
-  fieldvalue String
-  createtime DateTime   @default(now()) @db.Timestamp(6)
-  updatetime DateTime   @default(now()) @db.Timestamp(6)
-  eventslug  String
-  email      String
-  user       user       @relation(fields: [email], references: [email])
-  bingoevent bingoevent @relation(fields: [eventslug], references: [eventslug])
-}
-
-model bingoevent {
-  eventname      String
-  eventslug      String           @id
-  createtime     DateTime         @default(now()) @db.Timestamp(6)
-  updatetime     DateTime         @default(now()) @db.Timestamp(6)
-  bingocard      bingocard[]
-  bingocardfield bingocardfield[]
-}
-
-model counters {
-  id          String   @id
-  count       Int
-  emoji       String
-  counterName String
-  createtime  DateTime @default(now()) @db.Timestamp(6)
-  updatetime  DateTime @default(now()) @db.Timestamp(6)
 }

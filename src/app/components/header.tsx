@@ -12,8 +12,11 @@ export default function Header({
   isAuthenticated: boolean
   authKitUrl: string
 }) {
-  // get where we are in the app next
   const pathname = usePathname()
+  if (!isAuthenticated) {
+    return null
+  }
+  // get where we are in the app next
 
   const isEvents = pathname === "/"
   const isRestaurants = pathname.startsWith("/restaurants")

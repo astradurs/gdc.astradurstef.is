@@ -41,7 +41,6 @@ export default async function RootLayout({
                     isAuthenticated={isAuthenticated}
                     authKitUrl={authKitUrl}
                   />
-
                   {children}
                 </main>
               </Flex>
