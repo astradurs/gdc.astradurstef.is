@@ -1,8 +1,9 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 import { TrashIcon } from "@radix-ui/react-icons"
-import { Button, IconButton } from "@radix-ui/themes"
 
+import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -63,8 +64,8 @@ export function CreateNewWaitListEntryButton({
   }
 
   return (
-    <Button type="button" onClick={create} loading={isCreating}>
-      Skrá mig
+    <Button type="button" onClick={create} disabled={isCreating}>
+      {isCreating ? <Loader2 className="animate-spin" /> : "Skrá mig"}
     </Button>
   )
 }
@@ -77,6 +78,7 @@ export function RemoveFromWaitlistButton({
   email: string
 }) {
   const router = useRouter()
+
   const [isRemoving, setIsRemoving] = useState(false)
 
   const remove = async (e: React.SyntheticEvent) => {
@@ -91,14 +93,18 @@ export function RemoveFromWaitlistButton({
   }
 
   return (
-    <IconButton
+    <Button
       type="button"
-      loading={isRemoving}
       onClick={remove}
-      color="red"
-      size="1"
+      variant="destructive"
+      size="icon"
+      disabled={isRemoving}
     >
-      <TrashIcon height="16px" width="16px" />
-    </IconButton>
+      {isRemoving ? (
+        <Loader2 className="animate-spin" />
+      ) : (
+        <TrashIcon height="16px" width="16px" />
+      )}
+    </Button>
   )
 }

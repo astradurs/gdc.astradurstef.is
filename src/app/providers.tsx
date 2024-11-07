@@ -1,11 +1,10 @@
 // app/providers.tsx
 "use client"
 
+import { type ThemeProviderProps } from "next-themes/dist/types"
 import dynamic from "next/dynamic"
 
-import { Theme } from "@radix-ui/themes"
 import { ThemeProvider as StaticProvider } from "next-themes"
-
 const DynProvider = dynamic(
   () => import("next-themes").then((e) => e.ThemeProvider),
   {
@@ -13,12 +12,8 @@ const DynProvider = dynamic(
   },
 )
 
-export function ClientProviders({ children }: { children: React.ReactNode }) {
+export function Providers({ children, ...props }: ThemeProviderProps) {
   const NextThemeProvider =
     process.env.NODE_ENV === "production" ? StaticProvider : DynProvider
-  return (
-    <NextThemeProvider attribute="class" defaultTheme="dark">
-      <Theme>{children}</Theme>
-    </NextThemeProvider>
-  )
+  return <NextThemeProvider {...props}>{children}</NextThemeProvider>
 }

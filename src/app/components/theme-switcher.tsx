@@ -1,8 +1,9 @@
 // app/components/ThemeSwitcher.tsx
 "use client"
 
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons"
-import { IconButton } from "@radix-ui/themes"
+import { Button } from "@/components/ui/button"
+
+import { MoonIcon, SunIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
@@ -19,11 +20,12 @@ export function ThemeSwitcher() {
   const icon = theme === "dark" ? <MoonIcon /> : <SunIcon />
 
   return (
-    <IconButton
-      variant="surface"
+    <Button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      size="icon"
+      variant="outline"
     >
       {icon}
-    </IconButton>
+    </Button>
   )
 }

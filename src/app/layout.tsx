@@ -1,11 +1,9 @@
-import { Container, Flex } from "@radix-ui/themes"
-import "@radix-ui/themes/styles.css"
 import { AuthKitProvider } from "@workos-inc/authkit-nextjs"
 import type { Metadata } from "next"
 import { getAuthorizationUrl, getUser } from "./auth"
-import Header from "./components/header"
+import Header from "./components/header/header"
 import "./globals.css"
-import { ClientProviders } from "./providers"
+import { Providers } from "./providers"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,21 +30,24 @@ export default async function RootLayout({
       suppressHydrationWarning={process.env.NODE_ENV === "production"}
     >
       <body>
-        <ClientProviders>
+        <Providers
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <AuthKitProvider>
-            <Container>
-              <Flex height="100%" direction="column" justify="between">
-                <main>
-                  <Header
-                    isAuthenticated={isAuthenticated}
-                    authKitUrl={authKitUrl}
-                  />
-                  {children}
-                </main>
-              </Flex>
-            </Container>
+            <main className="h-screen w-full p-2.5">
+              <div className="mx-auto min-h-full max-w-5xl">
+                <Header
+                  isAuthenticated={isAuthenticated}
+                  authKitUrl={authKitUrl}
+                />
+                {children}
+              </div>
+            </main>
           </AuthKitProvider>
-        </ClientProviders>
+        </Providers>
       </body>
     </html>
   )

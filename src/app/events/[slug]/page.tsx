@@ -1,7 +1,6 @@
 import { getAuthorizationUrl, getUser } from "@/app/auth"
 import EventInfo from "@/app/components/event-info"
 import Waitlist from "@/app/components/waitlist"
-import { Grid, Heading } from "@radix-ui/themes"
 import { redirect } from "next/navigation"
 
 export default async function Event({
@@ -26,17 +25,17 @@ export default async function Event({
   }).then((res) => res.json())
 
   if (event.error !== undefined) {
-    return <Heading as="h2">No event found </Heading>
+    return <h2>No event found </h2>
   }
 
   if (user === undefined) {
-    return <Heading as="h2">No user found</Heading>
+    return <h2>No user found</h2>
   }
 
   return (
-    <Grid gap="4">
-      <Heading as="h2">{event.title}</Heading>
-      <Grid columns={{ sm: "2" }} gap="4">
+    <div className="grid gap-4">
+      <h2 className="text-center">{event.title}</h2>
+      <div className="grid sm:grid-cols-2 gap-4">
         <EventInfo event={event} />
         <Waitlist
           email={user.email}
@@ -45,7 +44,7 @@ export default async function Event({
           registrationStart={event.registration_start}
           waitlist={event.waitlist}
         />
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   )
 }

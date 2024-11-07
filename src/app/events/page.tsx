@@ -1,5 +1,4 @@
 import EventsGrid from "@/app/components/events-grid"
-import { Box, Flex, Grid, Heading, Text } from "@radix-ui/themes"
 import { getAuthorizationUrl, getUser } from "../auth"
 import NotSignedIn from "../components/not-signed-in"
 
@@ -18,7 +17,7 @@ export default async function Events() {
   }).then((res) => res.json())
 
   if (data.error !== undefined) {
-    return <Text>No events found</Text>
+    return <span>No events found</span>
   }
 
   const { futureEvents, pastEvents } = data
@@ -34,24 +33,22 @@ export default async function Events() {
   }
 
   return (
-    <Box>
-      <Grid gap="4">
-        <Flex justify="center">
-          <Heading>Hæ {fullName}!</Heading>
-        </Flex>
-        {futureEvents.length > 0 && (
-          <Flex gap="4" direction="column">
-            <Text>Næstu viðburðir</Text>
-            <EventsGrid events={futureEvents} />
-          </Flex>
-        )}
-        {pastEvents.length > 0 && (
-          <Flex gap="4" direction="column">
-            <Text>Liðnir viðburðir</Text>
-            <EventsGrid events={pastEvents} />
-          </Flex>
-        )}
-      </Grid>
-    </Box>
+    <div className="grid gap-4">
+      <div className="flex justify-center">
+        <h2>Hæ {fullName}!</h2>
+      </div>
+      {futureEvents.length > 0 && (
+        <div className="flex gap-4 flex-col">
+          <h3>Næstu viðburðir</h3>
+          <EventsGrid events={futureEvents} />
+        </div>
+      )}
+      {pastEvents.length > 0 && (
+        <div className="flex gap-4 flex-col">
+          <h3>Liðnir viðburðir</h3>
+          <EventsGrid events={pastEvents} />
+        </div>
+      )}
+    </div>
   )
 }

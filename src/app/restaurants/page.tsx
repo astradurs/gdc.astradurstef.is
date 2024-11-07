@@ -1,12 +1,17 @@
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  GlobeIcon,
-  HomeIcon,
-} from "@radix-ui/react-icons"
-import { Flex, IconButton, Link, Table, Text } from "@radix-ui/themes"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { GlobeIcon, HomeIcon } from "@radix-ui/react-icons"
 
+import { Button } from "@/components/ui/button"
+import { ArrowBigDownIcon, ArrowBigUpIcon } from "lucide-react"
 import { revalidatePath } from "next/cache"
+import Link from "next/link"
 import { getUser } from "../auth"
 
 type TVote = {
@@ -42,7 +47,7 @@ export default async function Restaurants() {
   const restaurants = data as Array<TRestaurant>
 
   if (restaurants.length === 0) {
-    return <Text>Engir veitingastaðir fundnir</Text>
+    return <span>Engir veitingastaðir fundnir</span>
   }
 
   const upsertVote = async (formData: FormData) => {
@@ -64,15 +69,17 @@ export default async function Restaurants() {
   }
 
   return (
-    <Table.Root>
-      <Table.Header>
-        <Table.Row>
-          <Table.RowHeaderCell>Heiti</Table.RowHeaderCell>
-          <Table.RowHeaderCell>Heimilisfang</Table.RowHeaderCell>
-          <Table.RowHeaderCell>Atkvæði</Table.RowHeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+    <Table>
+      <TableHeader>
+        <TableRow className="grid grid-cols-5">
+          <TableHead className="flex items-end col-span-2">Heiti</TableHead>
+          <TableHead className="flex items-end col-span-2">
+            Heimilisfang
+          </TableHead>
+          <TableHead className="flex items-end col-span-1">Atkvæði</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {restaurants.map((restaurant) => {
           const upvotes = restaurant.votes.filter((vote) => vote.vote === true)
           const downvotes = restaurant.votes.filter(
@@ -81,77 +88,77 @@ export default async function Restaurants() {
           const addressString = `${restaurant.address}, ${restaurant.city}, ${restaurant.zip}`
 
           return (
-            <Table.Row key={restaurant.id}>
-              <Table.Cell>
-                <Flex gap="2" align="center">
-                  <Text weight="bold">{restaurant.name}</Text>
-                  {restaurant.websiteurl &&
-                    restaurant.websiteurl.length > 0 && (
-                      <IconButton asChild size="1">
-                        <Link href={restaurant.websiteurl}>
-                          <GlobeIcon />
-                        </Link>
-                      </IconButton>
-                    )}
-                  {restaurant.googlemapsurl &&
-                    restaurant.googlemapsurl.length > 0 && (
-                      <IconButton asChild size="1">
-                        <Link href={restaurant.googlemapsurl}>
-                          <HomeIcon />
-                        </Link>
-                      </IconButton>
-                    )}
-                </Flex>
-              </Table.Cell>
-              <Table.Cell>{addressString}</Table.Cell>
-              <Table.Cell>
-                <Flex gap="2" align="center">
-                  <Flex gap="1" align="center">
-                    <Text weight="bold" color="green">
-                      {upvotes.length}
-                    </Text>
-                    <Text>/</Text>
-                    <Text weight="bold" color="red">
-                      {downvotes.length}
-                    </Text>
-                  </Flex>
-                  {showUpvoteDownvote && (
-                    <form action={upsertVote}>
-                      <input type="hidden" name="email" value={user?.email} />
-                      <input
-                        type="hidden"
-                        name="restaurantid"
-                        value={restaurant.id}
-                      />
-                      <Flex gap="1" align="center">
-                        <IconButton
-                          size="1"
-                          color="green"
-                          type="submit"
-                          name="vote"
-                          value="up"
-                        >
-                          <ArrowUpIcon />
-                        </IconButton>
-
-                        <IconButton
-                          size="1"
-                          color="red"
-                          type="submit"
-                          name="vote"
-                          value="down"
-                        >
-                          <ArrowDownIcon />
-                        </IconButton>
-                      </Flex>
-                    </form>
+            <TableRow key={restaurant.id} className="grid grid-cols-5">
+              <TableCell className="flex gap-2 items-center col-span-2">
+                <span className="font-bold">{restaurant.name}</span>
+                {restaurant.websiteurl && restaurant.websiteurl.length > 0 && (
+                  <Button asChild size="icon" variant="outline">
+                    <Link href={restaurant.websiteurl}>
+                      <GlobeIcon />
+                    </Link>
+                  </Button>
+                )}
+              </TableCell>
+              <TableCell className="flex gap-2 items-center col-span-2">
+                <span className="truncate shrink">{addressString}</span>
+                {restaurant.googlemapsurl &&
+                  restaurant.googlemapsurl.length > 0 && (
+                    <Button asChild size="icon" variant="outline">
+                      <Link href={restaurant.googlemapsurl}>
+                        <HomeIcon />
+                      </Link>
+                    </Button>
                   )}
-                </Flex>
-              </Table.Cell>
-            </Table.Row>
+              </TableCell>
+              <TableCell className="flex gap-4 items-center col-span-1">
+                {showUpvoteDownvote ? (
+                  <form action={upsertVote}>
+                    <input type="hidden" name="email" value={user?.email} />
+                    <input
+                      type="hidden"
+                      name="restaurantid"
+                      value={restaurant.id}
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        className="flex gap-1 items-center text-green-600 hover:text-green-800"
+                        type="submit"
+                        name="vote"
+                        value="up"
+                      >
+                        <span className="font-semibold">{upvotes.length}</span>
+                        <ArrowBigUpIcon scale={50} />
+                      </button>
+
+                      <button
+                        className="flex gap-1 items-center text-red-600 hover:text-red-800"
+                        type="submit"
+                        name="vote"
+                        value="down"
+                      >
+                        <ArrowBigDownIcon />
+                        <span className="font-semibold">
+                          {downvotes.length}
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="flex gap-1 items-center">
+                    <span className="font-bold text-green-600">
+                      {upvotes.length}
+                    </span>
+                    <span>/</span>
+                    <span className="font-bold text-red-600">
+                      {downvotes.length}
+                    </span>
+                  </div>
+                )}
+              </TableCell>
+            </TableRow>
           )
         })}
-      </Table.Body>
-    </Table.Root>
+      </TableBody>
+    </Table>
   )
 }

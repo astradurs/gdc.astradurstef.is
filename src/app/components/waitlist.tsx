@@ -1,4 +1,11 @@
-import { Flex, Grid, Table, Text } from "@radix-ui/themes"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import _ from "lodash"
 import {
   CreateNewWaitListEntryButton,
@@ -28,7 +35,7 @@ export default async function Waitlist({
   waitlist: Array<TWaitlistEntry>
 }) {
   if (waitlist.length === 0) {
-    return <Text>Enginn á biðlista</Text>
+    return <span>Enginn á biðlista</span>
   }
   const sortedByDate = _.sortBy(waitlist, (row) => row.createtime)
 
@@ -44,7 +51,7 @@ export default async function Waitlist({
   )
 
   return (
-    <Grid>
+    <div className="grid">
       <CreateNewWaitListEntryButton
         isoDate={isoDate}
         email={email}
@@ -52,14 +59,14 @@ export default async function Waitlist({
         registrationStatus={registrationStatus}
         registrationStart={registrationStart}
       />
-      <Table.Root>
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeaderCell>Nafn</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Sæti</Table.ColumnHeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nafn</TableHead>
+            <TableHead className="w-[100px]">Sæti</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {sortedByDate.map(
             (
               row: {
@@ -70,29 +77,27 @@ export default async function Waitlist({
               index,
             ) => {
               return (
-                <Table.Row key={row.isodate + "#" + row.email}>
-                  <Table.Cell>
-                    <Flex align="center">
+                <TableRow key={row.isodate + "#" + row.email}>
+                  <TableCell>
+                    <div className="flex items-center">
                       {row.user.firstname} {row.user.lastname}
-                    </Flex>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Flex align="center" justify="between">
-                      <Text>{index + 1}</Text>
-                      {row.email === email && (
-                        <RemoveFromWaitlistButton
-                          email={email}
-                          isoDate={isoDate}
-                        />
-                      )}
-                    </Flex>
-                  </Table.Cell>
-                </Table.Row>
+                    </div>
+                  </TableCell>
+                  <TableCell className="grid grid-cols-2 items-center gap-2">
+                    <span>{index + 1}</span>
+                    {row.email === email && (
+                      <RemoveFromWaitlistButton
+                        email={email}
+                        isoDate={isoDate}
+                      />
+                    )}
+                  </TableCell>
+                </TableRow>
               )
             },
           )}
-        </Table.Body>
-      </Table.Root>
-    </Grid>
+        </TableBody>
+      </Table>
+    </div>
   )
 }
