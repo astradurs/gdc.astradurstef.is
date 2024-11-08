@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ThemeSwitcher } from "../theme-switcher"
-import Nav from "./navigation-menu"
+import { DesktopNav, MobileNav } from "./navigation-menu"
 
 export default function Header({
   isAuthenticated,
@@ -35,7 +35,12 @@ export default function Header({
 
   return (
     <div className="flex justify-between">
-      <Nav />
+      <div className="hidden md:block">
+        <DesktopNav />
+      </div>
+      <div className="md:hidden">
+        <MobileNav />
+      </div>
       <div className="flex gap-2">
         {authButton}
         <ThemeSwitcher />

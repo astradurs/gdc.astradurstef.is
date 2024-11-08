@@ -30,10 +30,7 @@ export default function EventInfo({ event }: { event: SanityDocument }) {
     minute: "numeric",
   })
 
-  const locationQuery =
-    event.location.title.split(" ").join("+") +
-    "+" +
-    event.location.address.split(" ").join("+")
+  const locationQuery = event.location.address.split(" ").join("+")
 
   return (
     <div className="flex flex-col justify-between gap-4">

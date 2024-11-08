@@ -8,17 +8,15 @@ export default async function NotSignedIn({
   authKitUrl: string
 }) {
   return (
-    <div className="flex justify-center items-center min-h-full">
-      <Card className="grid gap-4">
-        <CardHeader>
-          <h2>Þú ert ekki skráð/ur inn</h2>
-        </CardHeader>
-        <CardContent>
-          <Button asChild>
-            <Link href={authKitUrl}>Skrá inn</Link>
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="mx-auto grid gap-4 max-w-md">
+      <CardHeader>
+        <h2>Þú ert ekki skráð/ur inn</h2>
+      </CardHeader>
+      <CardContent>
+        <Button asChild className="w-full">
+          <Link href={authKitUrl}>Skrá inn</Link>
+        </Button>
+      </CardContent>
+    </Card>
   )
 }

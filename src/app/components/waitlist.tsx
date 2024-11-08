@@ -34,9 +34,6 @@ export default async function Waitlist({
   registrationStart: string
   waitlist: Array<TWaitlistEntry>
 }) {
-  if (waitlist.length === 0) {
-    return <span>Enginn á biðlista</span>
-  }
   const sortedByDate = _.sortBy(waitlist, (row) => row.createtime)
 
   const isRegistered = sortedByDate.some(
@@ -50,8 +47,9 @@ export default async function Waitlist({
     }) => row.email === email,
   )
 
+  const emptyWaitlist = sortedByDate.length === 0
   return (
-    <div className="grid">
+    <div className="flex flex-col">
       <CreateNewWaitListEntryButton
         isoDate={isoDate}
         email={email}
@@ -67,34 +65,40 @@ export default async function Waitlist({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedByDate.map(
-            (
-              row: {
-                user: { firstname: string; lastname: string }
-                email: string
-                isodate: string
+          {emptyWaitlist ? (
+            <TableRow>
+              <TableCell>Enginn hefur skráð sig</TableCell>
+            </TableRow>
+          ) : (
+            sortedByDate.map(
+              (
+                row: {
+                  user: { firstname: string; lastname: string }
+                  email: string
+                  isodate: string
+                },
+                index,
+              ) => {
+                return (
+                  <TableRow key={row.isodate + "#" + row.email}>
+                    <TableCell>
+                      <div className="flex items-center">
+                        {row.user.firstname} {row.user.lastname}
+                      </div>
+                    </TableCell>
+                    <TableCell className="grid grid-cols-2 items-center gap-2">
+                      <span>{index + 1}</span>
+                      {row.email === email && (
+                        <RemoveFromWaitlistButton
+                          email={email}
+                          isoDate={isoDate}
+                        />
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )
               },
-              index,
-            ) => {
-              return (
-                <TableRow key={row.isodate + "#" + row.email}>
-                  <TableCell>
-                    <div className="flex items-center">
-                      {row.user.firstname} {row.user.lastname}
-                    </div>
-                  </TableCell>
-                  <TableCell className="grid grid-cols-2 items-center gap-2">
-                    <span>{index + 1}</span>
-                    {row.email === email && (
-                      <RemoveFromWaitlistButton
-                        email={email}
-                        isoDate={isoDate}
-                      />
-                    )}
-                  </TableCell>
-                </TableRow>
-              )
-            },
+            )
           )}
         </TableBody>
       </Table>

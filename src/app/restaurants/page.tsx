@@ -100,7 +100,9 @@ export default async function Restaurants() {
                 )}
               </TableCell>
               <TableCell className="flex gap-2 items-center col-span-2">
-                <span className="truncate shrink">{addressString}</span>
+                <span className="truncate shrink max-w-[100px] sm:max-w-[200px]">
+                  {addressString}
+                </span>
                 {restaurant.googlemapsurl &&
                   restaurant.googlemapsurl.length > 0 && (
                     <Button asChild size="icon" variant="outline">
@@ -119,7 +121,7 @@ export default async function Restaurants() {
                       name="restaurantid"
                       value={restaurant.id}
                     />
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <button
                         className="flex gap-1 items-center text-green-600 hover:text-green-800"
                         type="submit"
@@ -131,7 +133,7 @@ export default async function Restaurants() {
                       </button>
 
                       <button
-                        className="flex gap-1 items-center text-red-600 hover:text-red-800"
+                        className="flex flex-row-reverse sm:flex-row gap-1 items-center text-red-600 hover:text-red-800"
                         type="submit"
                         name="vote"
                         value="down"
