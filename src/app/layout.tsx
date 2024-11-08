@@ -1,5 +1,6 @@
 import { AuthKitProvider } from "@workos-inc/authkit-nextjs"
 import type { Metadata } from "next"
+import { headers } from "next/headers"
 import { getAuthorizationUrl, getUser } from "./auth"
 import Header from "./components/header/header"
 import "./globals.css"
@@ -15,13 +16,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const headerList = await headers()
+  const pathname = headerList.get("x-current-path")
+  console.log("Current path", pathname)
   const { isAuthenticated } = await getUser()
   let authKitUrl = ""
   if (isAuthenticated) {
     console.log("User is authenticated")
   } else {
     console.log("User is not authenticated")
-    authKitUrl = getAuthorizationUrl("/")
+    authKitUrl = getAuthorizationUrl(pathname ?? "/")
   }
 
   return (
