@@ -1,16 +1,8 @@
-import EventsGrid from "@/app/components/events-grid"
-import { getAuthorizationUrl, getUser } from "../auth"
-import NotSignedIn from "../components/not-signed-in"
+import EventsGrid from "@/components/events/events-grid"
+import { testAuth } from "../auth"
 
 export default async function Events() {
-  const { user, isAuthenticated } = await getUser()
-  if (isAuthenticated) {
-    console.log("User is authenticated")
-  } else {
-    console.log("User is not authenticated")
-    const authKitUrl = getAuthorizationUrl("/")
-    return <NotSignedIn authKitUrl={authKitUrl} />
-  }
+  const { user } = await testAuth()
 
   const data = await fetch(`${process.env.HOST}/api/events`, {
     method: "GET",

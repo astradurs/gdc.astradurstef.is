@@ -23,6 +23,47 @@ export function getAuthorizationUrl(pathname?: string) {
   return authorizationUrl
 }
 
+async function decryptSession(token: string) {
+  const ironSessionProvider = workos.userManagement.ironSessionProvider
+  const decryptedSession = await ironSessionProvider.unsealData(token, {
+    password: process.env.WORKOS_COOKIE_PASSWORD as string,
+    ttl: 60 * 60 * 24 * 7, // 1 week
+  })
+
+  return decryptedSession
+}
+
+export async function testAuth(): Promise<{
+  isAuthenticated: boolean
+  user: TUser | null
+}> {
+  const ck = await cookies()
+  const token = ck.get("token")?.value
+
+  if (token) {
+    const decryptedSession = await decryptSession(token)
+
+    const { user: authUser } = decryptedSession as { user: User | null }
+    console.log("User", authUser)
+    if (authUser) {
+      const dbUser = await prisma.user.findUnique({
+        where: {
+          email: authUser.email,
+        },
+      })
+      return {
+        isAuthenticated: true,
+        user: dbUser,
+      }
+    }
+  }
+
+  return {
+    isAuthenticated: false,
+    user: null,
+  }
+}
+
 export function getJwtSecretKey() {
   const secret = process.env.WORKOS_COOKIE_PASSWORD
 

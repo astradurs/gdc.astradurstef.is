@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { SanityDocument } from "next-sanity"
 import Link from "next/link"
-import DateTimeUtils from "../api/shared/date-time-utils"
+import DateTimeUtils from "../../src/app/api/shared/date-time-utils"
 
 interface GDCEvent extends SanityDocument {
   title: string

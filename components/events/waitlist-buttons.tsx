@@ -5,7 +5,10 @@ import { TrashIcon } from "@radix-ui/react-icons"
 
 import { Loader2Icon } from "lucide-react"
 import { useActionState } from "react"
-import { addToWaitlist, removeFromWaitlist } from "../actions"
+import {
+  addToWaitlist,
+  removeFromWaitlist,
+} from "../../src/app/events/[slug]/actions"
 
 export function CreateNewWaitListEntryButton({
   isoDate,

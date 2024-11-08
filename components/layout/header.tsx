@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ThemeSwitcher } from "../theme-switcher"
+import { ThemeSwitcher } from "../ui/theme-switcher"
 import { DesktopNav, MobileNav } from "./navigation-menu"
 
 export default function Header({
