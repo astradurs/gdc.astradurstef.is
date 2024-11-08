@@ -1,8 +1,12 @@
 "use server"
 import { revalidatePath } from "next/cache"
 
-export async function removeFromWaitlist(previousState, formData: FormData) {
+export async function removeFromWaitlist(
+  previousState: unknown,
+  formData: FormData,
+) {
   const f = "removeFromWaitlist"
+  console.log({ f }, "Removing from waitlist", previousState)
   const email = formData.get("email") as string
   const isoDate = formData.get("isoDate") as string
   console.log({ f }, "Removing from waitlist", {
@@ -24,8 +28,12 @@ export async function removeFromWaitlist(previousState, formData: FormData) {
   }
 }
 
-export async function addToWaitlist(previousState, formData: FormData) {
+export async function addToWaitlist(
+  previousState: unknown,
+  formData: FormData,
+) {
   const f = "addToWaitlist"
+  console.log({ f }, "Adding to waitlist", previousState)
   const email = formData.get("email") as string
   const isoDate = formData.get("isoDate") as string
   console.log({ f }, "Adding to waitlist", {

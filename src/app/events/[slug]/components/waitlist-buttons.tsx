@@ -21,6 +21,9 @@ export function CreateNewWaitListEntryButton({
   registrationStart: string
 }) {
   const [error, action, isPending] = useActionState(addToWaitlist, null)
+  if (error) {
+    console.error("Error adding to waitlist", error)
+  }
   if (isRegistered) {
     return (
       <Button disabled variant="outline">
@@ -72,6 +75,9 @@ export function RemoveFromWaitlistButton({
   email: string
 }) {
   const [error, action, isPending] = useActionState(removeFromWaitlist, null)
+  if (error) {
+    console.error("Error removing from waitlist", error)
+  }
 
   return (
     <form action={action}>
