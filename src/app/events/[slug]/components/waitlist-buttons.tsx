@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button"
 import { TrashIcon } from "@radix-ui/react-icons"
 
-import { Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { Loader2Icon } from "lucide-react"
+import { useActionState } from "react"
+import { addToWaitlist, removeFromWaitlist } from "../actions"
 
 export function CreateNewWaitListEntryButton({
   isoDate,
@@ -20,21 +20,7 @@ export function CreateNewWaitListEntryButton({
   registrationStatus: string
   registrationStart: string
 }) {
-  const router = useRouter()
-  const [isCreating, setIsCreating] = useState(false)
-
-  const create = async (e: React.SyntheticEvent) => {
-    setIsCreating(true)
-    e.preventDefault()
-    await fetch(`/api/events/${isoDate}`, {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    })
-
-    router.refresh()
-    setIsCreating(false)
-  }
-
+  const [error, action, isPending] = useActionState(addToWaitlist, null)
   if (isRegistered) {
     return (
       <Button disabled variant="outline">
@@ -64,9 +50,17 @@ export function CreateNewWaitListEntryButton({
   }
 
   return (
-    <Button type="button" onClick={create} disabled={isCreating}>
-      {isCreating ? <Loader2 className="animate-spin" /> : "Skrá mig"}
-    </Button>
+    <form action={action} className="flex w-full">
+      <input type="hidden" name="email" value={email} />
+      <input type="hidden" name="isoDate" value={isoDate} />
+      <Button className="w-full" type="submit" disabled={isPending}>
+        {isPending ? (
+          <Loader2Icon className="animate-spin" />
+        ) : (
+          <span>Skrá mig</span>
+        )}
+      </Button>
+    </form>
   )
 }
 
@@ -77,34 +71,24 @@ export function RemoveFromWaitlistButton({
   isoDate: string
   email: string
 }) {
-  const router = useRouter()
-
-  const [isRemoving, setIsRemoving] = useState(false)
-
-  const remove = async (e: React.SyntheticEvent) => {
-    setIsRemoving(true)
-    e.preventDefault()
-    await fetch(`/api/events/${isoDate}/${email}`, {
-      method: "DELETE",
-    })
-
-    router.refresh()
-    setIsRemoving(false)
-  }
+  const [error, action, isPending] = useActionState(removeFromWaitlist, null)
 
   return (
-    <Button
-      type="button"
-      onClick={remove}
-      variant="destructive"
-      size="icon"
-      disabled={isRemoving}
-    >
-      {isRemoving ? (
-        <Loader2 className="animate-spin" />
-      ) : (
-        <TrashIcon height="16px" width="16px" />
-      )}
-    </Button>
+    <form action={action}>
+      <input type="hidden" name="email" value={email} />
+      <input type="hidden" name="isoDate" value={isoDate} />
+      <Button
+        type="submit"
+        variant="destructive"
+        size="icon"
+        disabled={isPending}
+      >
+        {isPending ? (
+          <Loader2Icon className="animate-spin" />
+        ) : (
+          <TrashIcon height="16px" width="16px" />
+        )}
+      </Button>
+    </form>
   )
 }

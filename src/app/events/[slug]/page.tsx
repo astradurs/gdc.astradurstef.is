@@ -1,7 +1,7 @@
 import { getAuthorizationUrl, getUser } from "@/app/auth"
-import EventInfo from "@/app/components/event-info"
-import Waitlist from "@/app/components/waitlist"
 import { redirect } from "next/navigation"
+import EventInfo from "./components/event-info"
+import Waitlist from "./components/waitlist"
 
 export default async function Event({
   params,
