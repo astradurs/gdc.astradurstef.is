@@ -16,10 +16,11 @@ export async function GET(request: NextRequest) {
 
     if (restaurants.length === 0) {
       console.log({ f }, "No restaurants found")
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: "No restaurants found" },
-        { status: 404 },
+        { status: 200 },
       )
+      return response
     }
 
     console.log({ f }, `Fetched ${restaurants.length} restaurants`)
@@ -40,9 +41,25 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(restaurantsWithWaitlists, { status: 200 })
+    const response = NextResponse.json(restaurantsWithWaitlists, {
+      status: 200,
+    })
+
+    console.log({ f }, "✅ Success", response)
+    return response
   } catch (error) {
-    return NextResponse.json(error, { status: 500 })
+    console.error({ f }, "❌", error)
+    const response = NextResponse.json(
+      {
+        error: {
+          message: "Generic error",
+          code: "GenericError",
+        },
+      },
+      { status: 500 },
+    )
+    console.log({ f }, "❌", response)
+    return response
   }
 }
 

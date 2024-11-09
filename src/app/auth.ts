@@ -45,7 +45,7 @@ export async function verifyJwtToken(token: string) {
   }
 }
 
-type TUser = {
+export type TUser = {
   email: string
   firstname: string | null
   lastname: string | null
